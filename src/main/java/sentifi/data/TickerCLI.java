@@ -18,12 +18,14 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import de.siegmar.fastcsv.writer.CsvAppender;
 import de.siegmar.fastcsv.writer.CsvWriter;
 import sentifi.data.models.DataModels;
 import sentifi.data.utils.AlertUtils;
-import sentifi.data.utils.CSVUtils;
+import sentifi.data.utils.JSONUtils;
 import sentifi.data.utils.Utils;
 
 public class TickerCLI {
@@ -85,51 +87,68 @@ public class TickerCLI {
 		File file = new File(tickerSymbol + ".csv");
 		CsvWriter csvWriter = new CsvWriter();
 		DataModels dm = new DataModels();
-		//
+		JSONObject json = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
 
 		try (FileWriter fw = new FileWriter("alerts.dat", true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw);
 				CsvAppender csvAppender = csvWriter.append(file, StandardCharsets.UTF_8)) {
 
-			// CSV append header
+			// Append CSV header
 			csvAppender.appendLine(Utils.TICKER_STR, Utils.DATE_STR, Utils.OPEN_STR, Utils.HIGH_STR, Utils.LOW_STR,
 					Utils.CLOSE_STR, Utils.VOLUME_STR, Utils.TWAP_OPEN_STR, Utils.TWAP_HIGH_STR, Utils.TWAP_LOW_STR,
 					Utils.TWAP_CLOSE_STR, dm.getSMA50().getName(), dm.getSMA200().getName(), dm.getLWMA15().getName(),
 					dm.getLWMA50().getName());
+
 			while ((record = in.readLine()) != null) {
 				if (counter == 0) {
 					// this is header
 				} else {
-					// 1st column is Date
 					String[] attributes = record.split(",");
-					String date = attributes[0];
+					String date = attributes[0]; // 1st column is Date
 					double openValue = Double.parseDouble(attributes[1]);
 					double highValue = Double.parseDouble(attributes[2]);
 					double lowValue = Double.parseDouble(attributes[3]);
 					double closeValue = Double.parseDouble(attributes[4]);
 					double volume = Double.parseDouble(attributes[5]);
+
 					dm.addNewRecord(openValue, closeValue, highValue, lowValue, volume);
 
-					// CSV append row
-					csvAppender.appendLine(tickerSymbol, date, Double.toString(openValue), Double.toString(highValue),
-							Double.toString(lowValue), Double.toString(closeValue), Double.toString(volume),
-							Double.toString(dm.getTwap().getTWAPOpen()), Double.toString(dm.getTwap().getTWAPHigh()),
-							Double.toString(dm.getTwap().getTWAPLow()), Double.toString(dm.getTwap().getTWAPClose()),
-							Double.toString(dm.getSMA50().getAverage()), Double.toString(dm.getSMA200().getAverage()),
-							Double.toString(dm.getLWMA15().getAverage()), Double.toString(dm.getLWMA50().getAverage()));
+					// convert to String and ready for export CSV and JSON
+					String openValueStr = Double.toString(openValue);
+					String highValueStr = Double.toString(highValue);
+					String lowValueStr = Double.toString(lowValue);
+					String closeValueStr = Double.toString(closeValue);
+					String volumeStr = Double.toString(volume);
+					String twapOpenStr = Double.toString(dm.getTwap().getTWAPOpen());
+					String twapHighStr = Double.toString(dm.getTwap().getTWAPHigh());
+					String twapLowStr = Double.toString(dm.getTwap().getTWAPLow());
+					String twapCloseStr = Double.toString(dm.getTwap().getTWAPClose());
+					String sma50Str = Double.toString(dm.getSMA50().getAverage());
+					String sma200Str = Double.toString(dm.getSMA200().getAverage());
+					String lwma15Str = Double.toString(dm.getLWMA15().getAverage());
+					String lwma50Str = Double.toString(dm.getLWMA50().getAverage());
 
-					// if(counter < 10) {
-					System.out.println(record);
-					System.out.println(dm.getSMA50().toString());
-					System.out.println(dm.getSMA200().toString());
-					System.out.println(dm.getLWMA15().toString());
-					System.out.println(dm.getLWMA50().toString());
-					System.out.println(dm.getVA50().toString());
+					// Append functional REQ #1, #2 and #3 in ticker.csv
+					csvAppender.appendLine(tickerSymbol, date, openValueStr, highValueStr, lowValueStr, closeValueStr,
+							volumeStr, twapOpenStr, twapHighStr, twapLowStr, twapCloseStr, sma50Str, sma200Str,
+							lwma15Str, lwma50Str);
 
-					// Functional REQ #1, #2 and #3 in CSV
+					// Append functional REQ #1, #2 and #3 in JSONArray and
+					// ready for export ticker.json
+					JSONObject tmp = JSONUtils.createJSONRecord((String) tickerSymbol, date, openValueStr, highValueStr,
+							lowValueStr, closeValueStr, volumeStr, twapOpenStr, twapHighStr, twapLowStr, twapCloseStr,
+							sma50Str, sma200Str, lwma15Str, lwma50Str);;
+					
+					jsonArray.put(tmp);
+					
+					if(counter < 5) {
+						System.out.println(tmp);
+						System.out.println(jsonArray);
+					}
 
-					// Functional REQ #4
+					// Append functional REQ #4 in alerts.dat
 					double sma50Avg = dm.getSMA50().getAverage();
 					double sma200Avg = dm.getSMA200().getAverage();
 					double va50 = dm.getVA50().getAverage();
@@ -140,13 +159,19 @@ public class TickerCLI {
 						out.println(AlertUtils.getAlertSMA50AbovesSMA200(tickerSymbol, date, openValue, highValue,
 								lowValue, closeValue, volume, va50, sma50Avg, sma200Avg));
 					}
-					// }
 				}
 				counter++;
 			}
 			in.close();
+			
+			json.put(Utils.PRICES_STR, jsonArray);
+			JSONUtils.writeToJSONFile(tickerSymbol, json);
 		} catch (IOException e) {
-			// exception handling left as an exercise for the reader
+			// exception handling
+			logger.error("Error while handling file: " + e.getMessage());
+		} catch (Exception e) {
+			// exception handling
+			logger.error("Error while handling data: " + e.getMessage());
 		}
 		System.out.println(counter + " lines, 1st is headers");
 		System.out.println(dm);
