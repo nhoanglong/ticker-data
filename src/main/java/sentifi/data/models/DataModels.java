@@ -2,10 +2,10 @@ package sentifi.data.models;
 
 public class DataModels {
 	private TWAP twap = new TWAP();
-	private MovingAverageModel sma50 = new SimpleMovingAverage(5, "SMA-50");
-	private MovingAverageModel sma200 = new SimpleMovingAverage(7, "SMA-200");
-	private MovingAverageModel lwma15 = new LinearWeightedMovingAverage(5, "LWMA-15");
-	private MovingAverageModel lwma50 = new LinearWeightedMovingAverage(7, "LWMA-50");
+	private MovingAverageModel sma50 = new SimpleMovingAverage(50, "SMA-50");
+	private MovingAverageModel sma200 = new SimpleMovingAverage(200, "SMA-200");
+	private MovingAverageModel lwma15 = new LinearWeightedMovingAverage(15, "LWMA-15");
+	private MovingAverageModel lwma50 = new LinearWeightedMovingAverage(50, "LWMA-50");
 
 	public void addNewRecord(double open, double close, double high, double low) {
 		twap.addNewRecord(open, close, high, low);

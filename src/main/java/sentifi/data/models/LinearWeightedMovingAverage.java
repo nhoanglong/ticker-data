@@ -17,7 +17,6 @@ public class LinearWeightedMovingAverage extends SimpleMovingAverage {
 
 	/**
 	 * Add new value into list. Calculate the new simple moving average value.
-	 * 
 	 * @param closeValue
 	 */
 	@Override
