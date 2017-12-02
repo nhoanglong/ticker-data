@@ -91,6 +91,7 @@ public class SimpleMovingAverage implements MovingAverageModel{
 		this.average = average;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

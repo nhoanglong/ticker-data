@@ -23,6 +23,8 @@ import de.siegmar.fastcsv.writer.CsvAppender;
 import de.siegmar.fastcsv.writer.CsvWriter;
 import sentifi.data.models.DataModels;
 import sentifi.data.utils.AlertUtils;
+import sentifi.data.utils.CSVUtils;
+import sentifi.data.utils.Utils;
 
 public class TickerCLI {
 	private final static Logger logger = Logger.getLogger(App.class);
@@ -80,18 +82,21 @@ public class TickerCLI {
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String record;
 
-		File file = new File("foo.csv");
+		File file = new File(tickerSymbol + ".csv");
 		CsvWriter csvWriter = new CsvWriter();
 		DataModels dm = new DataModels();
 		//
-		
+
 		try (FileWriter fw = new FileWriter("alerts.dat", true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw);
 				CsvAppender csvAppender = csvWriter.append(file, StandardCharsets.UTF_8)) {
-			
-			//CSV header
-		    csvAppender.appendLine("header1", "header2");
+
+			// CSV append header
+			csvAppender.appendLine(Utils.TICKER_STR, Utils.DATE_STR, Utils.OPEN_STR, Utils.HIGH_STR, Utils.LOW_STR,
+					Utils.CLOSE_STR, Utils.VOLUME_STR, Utils.TWAP_OPEN_STR, Utils.TWAP_HIGH_STR, Utils.TWAP_LOW_STR,
+					Utils.TWAP_CLOSE_STR, dm.getSMA50().getName(), dm.getSMA200().getName(), dm.getLWMA15().getName(),
+					dm.getLWMA50().getName());
 			while ((record = in.readLine()) != null) {
 				if (counter == 0) {
 					// this is header
@@ -105,6 +110,15 @@ public class TickerCLI {
 					double closeValue = Double.parseDouble(attributes[4]);
 					double volume = Double.parseDouble(attributes[5]);
 					dm.addNewRecord(openValue, closeValue, highValue, lowValue, volume);
+
+					// CSV append row
+					csvAppender.appendLine(tickerSymbol, date, Double.toString(openValue), Double.toString(highValue),
+							Double.toString(lowValue), Double.toString(closeValue), Double.toString(volume),
+							Double.toString(dm.getTwap().getTWAPOpen()), Double.toString(dm.getTwap().getTWAPHigh()),
+							Double.toString(dm.getTwap().getTWAPLow()), Double.toString(dm.getTwap().getTWAPClose()),
+							Double.toString(dm.getSMA50().getAverage()), Double.toString(dm.getSMA200().getAverage()),
+							Double.toString(dm.getLWMA15().getAverage()), Double.toString(dm.getLWMA50().getAverage()));
+
 					// if(counter < 10) {
 					System.out.println(record);
 					System.out.println(dm.getSMA50().toString());
@@ -112,10 +126,10 @@ public class TickerCLI {
 					System.out.println(dm.getLWMA15().toString());
 					System.out.println(dm.getLWMA50().toString());
 					System.out.println(dm.getVA50().toString());
-					
-					//Functional REQ #1, #2 and #3 in CSV
 
-					//Functional REQ #4
+					// Functional REQ #1, #2 and #3 in CSV
+
+					// Functional REQ #4
 					double sma50Avg = dm.getSMA50().getAverage();
 					double sma200Avg = dm.getSMA200().getAverage();
 					double va50 = dm.getVA50().getAverage();

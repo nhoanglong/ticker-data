@@ -136,3 +136,19 @@ Sending 'GET' request to URL : https://www.quandl.com/api/v3/datasets/WIKI/GE.cs
 2017-12-02 16:17:17 DEBUG App:73 - 
 Sending 'GET' request to URL : https://www.quandl.com/api/v3/datasets/WIKI/GE.csv?order=asc
 2017-12-02 16:17:17 DEBUG App:74 - Response Code : 200
+2017-12-02 21:44:44 INFO  App:69 - Retrieving data of GE from Quandl...
+2017-12-02 21:44:51 DEBUG App:78 - 
+Sending 'GET' request to URL : https://www.quandl.com/api/v3/datasets/WIKI/GE.csv?order=asc
+2017-12-02 21:44:51 DEBUG App:79 - Response Code : 200
+2017-12-02 21:53:00 INFO  App:69 - Retrieving data of GE from Quandl...
+2017-12-02 21:53:07 DEBUG App:78 - 
+Sending 'GET' request to URL : https://www.quandl.com/api/v3/datasets/WIKI/GE.csv?order=asc
+2017-12-02 21:53:07 DEBUG App:79 - Response Code : 200
+2017-12-02 21:56:35 INFO  App:70 - Retrieving data of GE from Quandl...
+2017-12-02 21:56:41 DEBUG App:79 - 
+Sending 'GET' request to URL : https://www.quandl.com/api/v3/datasets/WIKI/GE.csv?order=asc
+2017-12-02 21:56:41 DEBUG App:80 - Response Code : 200
+2017-12-02 21:57:49 INFO  App:70 - Retrieving data of GE from Quandl...
+2017-12-02 21:57:55 DEBUG App:79 - 
+Sending 'GET' request to URL : https://www.quandl.com/api/v3/datasets/WIKI/GE.csv?order=asc
+2017-12-02 21:57:55 DEBUG App:80 - Response Code : 200
