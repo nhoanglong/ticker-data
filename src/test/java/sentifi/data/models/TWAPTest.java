@@ -7,14 +7,14 @@ import junit.framework.TestSuite;
 public class TWAPTest extends TestCase {
 	private TWAP twap = new TWAP();
 	//4 days with open, close, high, low respectively
-	private static Double[][] testData1 = { {1.0, 2.0, 3.0, 4.0}, 		   // day 1
+	private static double[][] testData1 = { {1.0, 2.0, 3.0, 4.0}, 		   // day 1
 											{50.1, 20.2, 31.3, 23.7},	   // day 2
 											{25.1, 36.2, 24.3, 13.7},      // day 3
 											{150.1, 120.2, 131.3, 123.7}}; // day 4
 	//1 day
-	private static Double[][] testData2 = {{50.1, 20.2, 31.3, 23.7}};
+	private static double[][] testData2 = {{50.1, 20.2, 31.3, 23.7}};
 	//3 days with open, close, high, low respectively
-	private static Double[][] testData3 = { {100.1, 68.5, 98.0, 78.0}, // day 1
+	private static double[][] testData3 = { {100.1, 68.5, 98.0, 78.0}, // day 1
 											{50.1, 20.2, 31.3, 23.7},  // day 2
 											{25.1, 36.2, 24.3, 13.7}}; // day 3
 
@@ -36,8 +36,8 @@ public class TWAPTest extends TestCase {
         return new TestSuite( TWAPTest.class );
     }
     
-    private Double[] prepareRecords(Double[][] testData) {
-    	Double[] expectedSum = {0.0, 0.0,0.0,0.0};
+    private double[] prepareRecords(double[][] testData) {
+    	double[] expectedSum = {0.0, 0.0,0.0,0.0};
     	
     	for (int i = 0; i < testData.length; i++) {
     		twap.addNewRecord(testData[i][0],testData[i][1],testData[i][2], testData[i][3]);
@@ -54,7 +54,7 @@ public class TWAPTest extends TestCase {
     public void testData1() 
     {
     	int numberOfRecords = testData1.length;
-    	Double[] expectedSum = prepareRecords(testData1);
+    	double[] expectedSum = prepareRecords(testData1);
     	assertEquals(twap.getOpenSum(), expectedSum[0]);
     	assertEquals(twap.getCloseSum(), expectedSum[1]);
     	assertEquals(twap.getHighSum(), expectedSum[2]);
@@ -69,7 +69,7 @@ public class TWAPTest extends TestCase {
     public void testData2() 
     {
     	int numberOfRecords = testData2.length;
-    	Double[] expectedSum = prepareRecords(testData2);
+    	double[] expectedSum = prepareRecords(testData2);
     	assertEquals(twap.getOpenSum(), expectedSum[0]);
     	assertEquals(twap.getCloseSum(), expectedSum[1]);
     	assertEquals(twap.getHighSum(), expectedSum[2]);
@@ -84,7 +84,7 @@ public class TWAPTest extends TestCase {
     public void testData3() 
     {
     	int numberOfRecords = testData3.length;
-    	Double[] expectedSum = prepareRecords(testData3);
+    	double[] expectedSum = prepareRecords(testData3);
     	assertEquals(twap.getOpenSum(), expectedSum[0]);
     	assertEquals(twap.getCloseSum(), expectedSum[1]);
     	assertEquals(twap.getHighSum(), expectedSum[2]);
