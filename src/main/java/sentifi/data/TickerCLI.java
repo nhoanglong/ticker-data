@@ -2,12 +2,14 @@ package sentifi.data;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -17,6 +19,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 
+import de.siegmar.fastcsv.writer.CsvAppender;
+import de.siegmar.fastcsv.writer.CsvWriter;
 import sentifi.data.models.DataModels;
 import sentifi.data.utils.AlertUtils;
 
@@ -75,12 +79,19 @@ public class TickerCLI {
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String record;
+
+		File file = new File("foo.csv");
+		CsvWriter csvWriter = new CsvWriter();
 		DataModels dm = new DataModels();
 		//
-
+		
 		try (FileWriter fw = new FileWriter("alerts.dat", true);
 				BufferedWriter bw = new BufferedWriter(fw);
-				PrintWriter out = new PrintWriter(bw)) {
+				PrintWriter out = new PrintWriter(bw);
+				CsvAppender csvAppender = csvWriter.append(file, StandardCharsets.UTF_8)) {
+			
+			//CSV header
+		    csvAppender.appendLine("header1", "header2");
 			while ((record = in.readLine()) != null) {
 				if (counter == 0) {
 					// this is header
@@ -94,7 +105,7 @@ public class TickerCLI {
 					double closeValue = Double.parseDouble(attributes[4]);
 					double volume = Double.parseDouble(attributes[5]);
 					dm.addNewRecord(openValue, closeValue, highValue, lowValue, volume);
-					//if(counter < 10) {
+					// if(counter < 10) {
 					System.out.println(record);
 					System.out.println(dm.getSMA50().toString());
 					System.out.println(dm.getSMA200().toString());
@@ -102,13 +113,16 @@ public class TickerCLI {
 					System.out.println(dm.getLWMA50().toString());
 					System.out.println(dm.getVA50().toString());
 					
+					//Functional REQ #1, #2 and #3 in CSV
+
+					//Functional REQ #4
 					double sma50Avg = dm.getSMA50().getAverage();
 					double sma200Avg = dm.getSMA200().getAverage();
 					double va50 = dm.getVA50().getAverage();
 					if (sma50Avg < sma200Avg) {
 						out.println(AlertUtils.getAlertSMA50LowerThanSMA200(tickerSymbol, date, openValue, highValue,
 								lowValue, closeValue, volume, sma50Avg, sma200Avg));
-					} else if (sma50Avg > sma200Avg && volume > va50*1.1){
+					} else if (sma50Avg > sma200Avg && volume > va50 * 1.1) {
 						out.println(AlertUtils.getAlertSMA50AbovesSMA200(tickerSymbol, date, openValue, highValue,
 								lowValue, closeValue, volume, va50, sma50Avg, sma200Avg));
 					}
