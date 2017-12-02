@@ -105,7 +105,7 @@ public class TWAP {
 
 	@Override
 	public String toString() {
-		return "TWAP-Open: " + getTWAPOpen() + " TWAP-High: " + getTWAPHigh() + " TWAP-Low: " + getTWAPLow()
-				+ " TWAP-Close: " + getTWAPClose() + " via "+ counter + " records";
+		return "TWAP via " + counter + " records:\nTWAP-Open: " + getTWAPOpen() + " TWAP-High: "
+				+ getTWAPHigh() + "\nTWAP-Low: " + getTWAPLow() + " TWAP-Close: " + getTWAPClose();
 	}
 }

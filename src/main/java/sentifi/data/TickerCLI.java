@@ -72,16 +72,26 @@ public class TickerCLI {
 		DataModels dm = new DataModels();
 		//
 		while ((record = in.readLine()) != null) {
-			System.out.println(record);
 			if(counter==0) {
 				//this is header
 			} else {
-				dm.addNewRecord(record);
+				// 1st column is Date
+				String[] attributes = record.split(",");
+				double openValue = Double.parseDouble(attributes[1]);
+				double highValue = Double.parseDouble(attributes[2]);
+				double lowValue = Double.parseDouble(attributes[3]);
+				double closeValue = Double.parseDouble(attributes[4]);
+				dm.addNewRecord(openValue, closeValue, highValue, lowValue);
+				if(counter < 10) {
+					System.out.println(record);
+					System.out.println(dm.getSMA50().toString());
+					System.out.println(dm.getSMA200().toString());
+				}				
 			}
 			counter++;
 		}
 		in.close();
-		System.out.println(counter);
+		System.out.println(counter+" lines, 1st is headers");
 		System.out.println(dm);
 	}
 }
