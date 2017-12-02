@@ -29,11 +29,16 @@ public class SimpleMovingAverageTest extends TestCase {
 														10, 20, 34.0, 55.6, 77.6, 98.6 };
 	// 1 day
 	private static double[][] testData2 = { { 50.1, 20.2, 31.3, 23.7 } };
+	private static final double[] correctTestData2 = {0.0};
+	private static final double[] incorrectTestData2 = {1.0};
 	
 	// 3 days with open, close, high, low respectively
 	private static double[][] testData3 = { { 100.1, 68.5, 98.0, 78.0 },  // day 1
 											{ 50.1, 20.2, 31.3, 23.7 },   // day 2
 											{ 25.1, 36.2, 24.3, 13.7 } }; // day 3
+	
+	private static final double[] correctTestData3 = {0.0, 0.0, 0.0};
+	private static final double[] incorrectTestData3 = {0.0, 0.0, 1.0};
 
 
 	/**
@@ -70,6 +75,22 @@ public class SimpleMovingAverageTest extends TestCase {
     
     public void testIncorrectSM5Data1() {
     	assertFalse(Arrays.equals(prepareRecords(testData1), incorrectTestData1));
+    }
+    
+    public void testCorrectSM5Data2() {
+    	assertTrue(Arrays.equals(prepareRecords(testData2), correctTestData2));
+    }
+    
+    public void testIncorrectSM5Data2() {
+    	assertFalse(Arrays.equals(prepareRecords(testData2), incorrectTestData2));
+    }
+    
+    public void testCorrectSM5Data3() {
+    	assertTrue(Arrays.equals(prepareRecords(testData3), correctTestData3));
+    }
+    
+    public void testIncorrectSM5Data3() {
+    	assertFalse(Arrays.equals(prepareRecords(testData3), incorrectTestData3));
     }
    
 
