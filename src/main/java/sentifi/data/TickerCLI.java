@@ -86,6 +86,8 @@ public class TickerCLI {
 					System.out.println(record);
 					System.out.println(dm.getSMA50().toString());
 					System.out.println(dm.getSMA200().toString());
+					System.out.println(dm.getLWMA15().toString());
+					System.out.println(dm.getLWMA50().toString());
 				}				
 			}
 			counter++;
