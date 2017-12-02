@@ -102,4 +102,10 @@ public class TWAP {
 	public void setCounter(int counter) {
 		this.counter = counter;
 	}
+
+	@Override
+	public String toString() {
+		return "TWAP-Open: " + getTWAPOpen() + " TWAP-High: " + getTWAPHigh() + " TWAP-Low: " + getTWAPLow()
+				+ " TWAP-Close: " + getTWAPClose() + " via "+ counter + " records";
+	}
 }
