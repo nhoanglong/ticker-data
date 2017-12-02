@@ -6,13 +6,15 @@ public class DataModels {
 	private MovingAverageModel sma200 = new SimpleMovingAverage(200, "SMA-200");
 	private MovingAverageModel lwma15 = new LinearWeightedMovingAverage(15, "LWMA-15");
 	private MovingAverageModel lwma50 = new LinearWeightedMovingAverage(50, "LWMA-50");
-
-	public void addNewRecord(double open, double close, double high, double low) {
+	private MovingAverageModel va50 = new VolumeAverage(5, "VolumeAverage-50");
+	
+	public void addNewRecord(double open, double close, double high, double low, double volume) {
 		twap.addNewRecord(open, close, high, low);
 		sma50.addNewValue(close);
 		sma200.addNewValue(close);
 		lwma15.addNewValue(close);
 		lwma50.addNewValue(close);
+		va50.addNewValue(volume);
 	}
 
 	public TWAP getTwap() {
@@ -54,10 +56,18 @@ public class DataModels {
 	public void setLWMA50(MovingAverageModel lwma50) {
 		this.lwma50 = lwma50;
 	}
+	
+	public MovingAverageModel getVA50() {
+		return va50;
+	}
+
+	public void setVA50(MovingAverageModel va50) {
+		this.va50 = va50;
+	}
 
 	@Override
 	public String toString() {
 		return this.getTwap().toString() + "\n" + this.getSMA50().toString() + "\n" + this.getSMA200().toString() + "\n"
-				+ this.getLWMA15().toString() + "\n" + this.getLWMA50().toString();
+				+ this.getLWMA15().toString() + "\n" + this.getLWMA50().toString() + "\n" + this.getVA50().toString();
 	}
 }

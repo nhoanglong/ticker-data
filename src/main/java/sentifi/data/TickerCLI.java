@@ -93,16 +93,24 @@ public class TickerCLI {
 					double lowValue = Double.parseDouble(attributes[3]);
 					double closeValue = Double.parseDouble(attributes[4]);
 					double volume = Double.parseDouble(attributes[5]);
-					dm.addNewRecord(openValue, closeValue, highValue, lowValue);
-					// if(counter < 10) {
+					dm.addNewRecord(openValue, closeValue, highValue, lowValue, volume);
+					//if(counter < 10) {
 					System.out.println(record);
 					System.out.println(dm.getSMA50().toString());
 					System.out.println(dm.getSMA200().toString());
 					System.out.println(dm.getLWMA15().toString());
 					System.out.println(dm.getLWMA50().toString());
-					if (dm.getSMA50().getAverage() < dm.getSMA200().getAverage()) {
+					System.out.println(dm.getVA50().toString());
+					
+					double sma50Avg = dm.getSMA50().getAverage();
+					double sma200Avg = dm.getSMA200().getAverage();
+					double va50 = dm.getVA50().getAverage();
+					if (sma50Avg < sma200Avg) {
 						out.println(AlertUtils.getAlertSMA50LowerThanSMA200(tickerSymbol, date, openValue, highValue,
-								lowValue, closeValue, volume, dm.getSMA50().getAverage(), dm.getSMA200().getAverage()));
+								lowValue, closeValue, volume, sma50Avg, sma200Avg));
+					} else if (sma50Avg > sma200Avg && volume > va50*1.1){
+						out.println(AlertUtils.getAlertSMA50AbovesSMA200(tickerSymbol, date, openValue, highValue,
+								lowValue, closeValue, volume, va50, sma50Avg, sma200Avg));
 					}
 					// }
 				}

@@ -6,9 +6,9 @@ import java.util.Queue;
 public class SimpleMovingAverage implements MovingAverageModel{
 	private String name;
 	private int length;
-	private double average;
 	private boolean lowerThanLengthFlag = true;
 	
+	protected double average;
 	protected double basicSum;
 	protected Queue<Double> values = new LinkedList<Double>();
 	
