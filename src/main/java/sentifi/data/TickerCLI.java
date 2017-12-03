@@ -184,8 +184,6 @@ public class TickerCLI {
 			// exception handling
 			logger.error("Error while handling data: " + e.getMessage());
 		}
-		System.out.println(counter + " lines, 1st is headers");
-		System.out.println(dm);
 	}
 
 	/**

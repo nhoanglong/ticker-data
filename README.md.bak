@@ -66,8 +66,6 @@ With the above flow, the retrieved dataset is iterated only one time, means `O(n
 
 *If we retrieve data as descending order, then we have to run 2 loops, one via dataset for computation and holders result in memory, and then another loop for writing data, **means `O(2n)` compares to `O(n)` when doing all computations and writing data for CSV for and alerts**.
 
-*Author also thought about multithread design, each models will be calculated on each thread. It might be the best solution with best performance. However, due to the limitation of time for the assignment, this assignment only runs on one main thread. 
-
 ####5. TWAP
 
 Time Weighted Average Prices for the Open, High, Low and Close prices. These values are calculated as the average of each over every day in the range. 
