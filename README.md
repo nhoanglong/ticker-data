@@ -3,10 +3,12 @@ ticker-data processing and tranformation
 
 This document contains many sections: usage description, data source and data processing & transformation: include TWAP, SMA, LWMA.
 
+
 1. Requirement
 --
 
 Java 1.8
+
 
 2. Usage
 --
