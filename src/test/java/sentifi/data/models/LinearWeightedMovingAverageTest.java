@@ -42,9 +42,7 @@ public class LinearWeightedMovingAverageTest extends TestCase {
 
 	/**
 	 * Create the test case
-	 *
 	 * @param testName
-	 *            name of the test case
 	 */
 	public LinearWeightedMovingAverageTest(String testName) {
 		super(testName);

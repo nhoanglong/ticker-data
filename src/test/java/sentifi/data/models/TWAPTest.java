@@ -21,9 +21,7 @@ public class TWAPTest extends TestCase {
 
 	/**
 	 * Create the test case
-	 *
 	 * @param testName
-	 *            name of the test case
 	 */
 	public TWAPTest(String testName) {
 		super(testName);

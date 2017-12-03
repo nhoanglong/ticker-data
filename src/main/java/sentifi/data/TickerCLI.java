@@ -188,6 +188,26 @@ public class TickerCLI {
 		System.out.println(dm);
 	}
 
+	/**
+	 * Write csv line
+	 * @param csvAppender
+	 * @param tickerSymbol
+	 * @param date
+	 * @param openValueStr
+	 * @param highValueStr
+	 * @param lowValueStr
+	 * @param closeValueStr
+	 * @param volumeStr
+	 * @param twapOpenStr
+	 * @param twapHighStr
+	 * @param twapLowStr
+	 * @param twapCloseStr
+	 * @param sma50Str
+	 * @param sma200Str
+	 * @param lwma15Str
+	 * @param lwma50Str
+	 * @throws IOException
+	 */
 	public void writeCSVLine(CsvAppender csvAppender, String tickerSymbol, String date, String openValueStr,
 			String highValueStr, String lowValueStr, String closeValueStr, String volumeStr, String twapOpenStr,
 			String twapHighStr, String twapLowStr, String twapCloseStr, String sma50Str, String sma200Str,
@@ -196,6 +216,20 @@ public class TickerCLI {
 				twapOpenStr, twapHighStr, twapLowStr, twapCloseStr, sma50Str, sma200Str, lwma15Str, lwma50Str);
 	}
 
+	/**
+	 * REQ #4 Write alert if matches conditions
+	 * @param out
+	 * @param ticker
+	 * @param date
+	 * @param open
+	 * @param high
+	 * @param low
+	 * @param close
+	 * @param volume
+	 * @param volAverage50
+	 * @param sma50Avg
+	 * @param sma200Avg
+	 */
 	public void writeAlertIfSatisfiesConditions(PrintWriter out, String ticker, String date, double open, double high,
 			double low, double close, double volume, double volAverage50, double sma50Avg, double sma200Avg) {
 		if (sma50Avg < sma200Avg) {
