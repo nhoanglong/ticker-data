@@ -1,6 +1,9 @@
 package sentifi.data.utils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import org.json.JSONObject;
 
@@ -68,5 +71,40 @@ public class JSONUtils {
 		json.put(Utils.SMA_50_STR, lwma15);
 		json.put(Utils.SMA_200_STR, lwma50);
 		return json;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static JSONObject createJSONRecord() {
+		String emptyString = "";
+		JSONObject json = new JSONObject();
+		json.put(Utils.TICKER_STR, emptyString);
+		json.put(Utils.DATE_STR, emptyString);
+		json.put(Utils.OPEN_STR, emptyString);
+		json.put(Utils.HIGH_STR, emptyString);
+		json.put(Utils.LOW_STR, emptyString);
+		json.put(Utils.CLOSE_STR, emptyString);
+		json.put(Utils.VOLUME_STR, emptyString);
+		json.put(Utils.TWAP_OPEN_STR, emptyString);
+		json.put(Utils.TWAP_HIGH_STR, emptyString);
+		json.put(Utils.TWAP_LOW_STR, emptyString);
+		json.put(Utils.TWAP_CLOSE_STR, emptyString);
+		json.put(Utils.SMA_50_STR, emptyString);
+		json.put(Utils.SMA_200_STR, emptyString);
+		json.put(Utils.SMA_50_STR, emptyString);
+		json.put(Utils.SMA_200_STR, emptyString);
+		return json;
+	}
+	
+	public static String readFile(String filename) throws IOException {
+	    String result = "";
+	    BufferedReader br = new BufferedReader(new FileReader(filename));
+        StringBuilder sb = new StringBuilder();
+        String line = br.readLine();
+        while (line != null) {
+            sb.append(line);
+            line = br.readLine();
+        }
+        result = sb.toString();
+	    return result;
 	}
 }

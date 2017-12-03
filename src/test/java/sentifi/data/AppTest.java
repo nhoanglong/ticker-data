@@ -3,7 +3,6 @@ package sentifi.data;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import sentifi.data.models.TWAP;
 
 /**
  * Unit test for simple App.
