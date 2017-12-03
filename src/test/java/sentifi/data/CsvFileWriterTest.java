@@ -8,17 +8,21 @@ import java.util.List;
 
 import de.siegmar.fastcsv.reader.CsvParser;
 import de.siegmar.fastcsv.reader.CsvReader;
-import de.siegmar.fastcsv.reader.CsvRow;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 public class CsvFileWriterTest extends TestCase{
 	private List<String> expectedHeaders = Arrays.asList("Ticker","Date","Open", "High",
-														 "Low", "Close", "Volumn",
+														 "Low", "Close", "Volume",
 														 "TWAP-Open", "TWAP-High", "TWAP-Low",
 														 "TWAP-Close", "SMA-50", "SMA-200",
 														 "LWMA-15", "LWMA-50");
+	private List<String> inCorrectHeaders = Arrays.asList("Date","Open", "High",
+			 												"Low", "Close", "Volume",
+			 												"TWAP-Open", "TWAP-High", "TWAP-Low",
+			 												"TWAP-Close", "SMA-50", "SMA-200",
+			 												"LWMA-15", "LWMA-50");
 	private static final String[] TICKER = {"GE", "GOOG", "MSFT"}; 
 	/**
      * Create the test case
@@ -51,12 +55,51 @@ public class CsvFileWriterTest extends TestCase{
 		try {
 			csvParser = csvReader.parse(file, StandardCharsets.UTF_8);
 			List<String> header = csvParser.nextRow().getFields();
-			System.out.println(header);
-			System.out.println(expectedHeaders);
-			System.out.println(expectedHeaders.s(Arrays.asList(header)));
-	    	assertTrue(Arrays.asList(header).containsAll(expectedHeaders));
+			assertTrue(expectedHeaders.containsAll(header));
 		} catch (IOException e) {
-			assertTrue(true);
+			assertTrue(false);
 		}
+    }
+    
+    public void testIncorrectHeader()
+    {
+    	File file = new File(TICKER[0]+".csv");
+    	CsvReader csvReader = new CsvReader();
+    	CsvParser csvParser = null;
+		try {
+			csvParser = csvReader.parse(file, StandardCharsets.UTF_8);
+			List<String> header = csvParser.nextRow().getFields();
+			assertFalse(inCorrectHeaders.containsAll(header));
+		} catch (IOException e) {
+			assertTrue(false);
+		}
+    }
+    
+    public void testGOOGFileDoesNotExist()
+    {
+    	File file = new File(TICKER[1]+".csv");
+    	CsvReader csvReader = new CsvReader();
+    	IOException ex = null;
+		try {
+			csvReader.parse(file, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			ex = e;
+		}
+		assertFalse(ex == null);
+		
+    }
+    
+    public void testMSFTFileDoesNotExist()
+    {
+    	File file = new File(TICKER[2]+".csv");
+    	CsvReader csvReader = new CsvReader();
+    	IOException ex = null;
+		try {
+			csvReader.parse(file, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			ex = e;
+		}
+		assertFalse(ex == null);
+		
     }
 }
