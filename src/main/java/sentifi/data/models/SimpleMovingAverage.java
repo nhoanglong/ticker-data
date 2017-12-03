@@ -3,6 +3,20 @@ package sentifi.data.models;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Simple Moving Average model.
+ * Implements the Moving Average interface.
+ * 
+ * For example: the last five closing prices for MSFT are:
+ * 		28.93+28.48+28.44+28.91+28.48 = 143.24
+ * Simple Moving Average in the past 5 days is:
+ * 		5-day SMA = 143.24/5 = 28.65
+ * For the first N days in the series, set value to 0 when writing to files.
+ * 
+ * @author nhoanglong
+ * @since Dec 03 2017
+ * @version 1.0
+ */
 public class SimpleMovingAverage implements MovingAverageModel{
 	private String name;
 	private int length;
@@ -36,15 +50,10 @@ public class SimpleMovingAverage implements MovingAverageModel{
 			basicSum -= ((Double) values.element()).doubleValue();
 			values.remove();
 		}
-		/*if(value == -1) {//mean missing data of the day
-			values.addLast(new Double(value)); // only add last
-			// no calculate new sum
-			// no calculate new average
-		} else {*/
-			basicSum += closeValue;
-			values.add(new Double(closeValue));
-			this.setAverage(basicSum / values.size());//calculate new average
-		//}		
+		
+		basicSum += closeValue;
+		values.add(new Double(closeValue));
+		this.setAverage(basicSum / values.size());//calculate new average	
 	}
 	
 	public Queue<Double> getValues() {
@@ -79,6 +88,12 @@ public class SimpleMovingAverage implements MovingAverageModel{
 		this.lowerThanLengthFlag = lowerThanLengthFlag;
 	}
 
+	
+	/**
+	 * Get the Average Moving value.
+	 * For the first N days, return to 0.
+	 * @return average
+	 */
 	@Override
 	public double getAverage() {
 		if(this.isLowerThanLengthFlag()) {
@@ -91,6 +106,11 @@ public class SimpleMovingAverage implements MovingAverageModel{
 		this.average = average;
 	}
 
+	/**
+	 * Get name of model
+	 * @return name
+	 */
+	@Override
 	public String getName() {
 		return name;
 	}
