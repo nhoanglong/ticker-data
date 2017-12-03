@@ -7,6 +7,7 @@ This document contains many sections: usage description, data source and data pr
 --
 
 Java 1.8
+
 2. Usage
 --
 
@@ -38,9 +39,15 @@ Furthermore, the output result of REQ #4 is in `alerts.dat`.
 
 The data is retrieved from `https://www.quandl.com/` as the following URL for `GE`:
 
-`https://www.quandl.com/api/v3/datasets/WIKI/GE.json?order=asc`
+`https://www.quandl.com/api/v3/datasets/WIKI/GE.csv?order=asc`
 
-The reason why the author decided to retrieve data as ascending order is for convenient and efficient SMA and LWMA computation. More detail explaination will be discuss later sections.
+The reason why the author decided to retrieve data as ascending order is for convenient and efficient `SMA` and `LWMA` computation. More detail explanation will be discuss later sections.
+
+The author also had planned to retrieve only necessary data, include date, open, high, low, close and volume values only for performance purpose. Unfortunately, the time series data of `https://www.quandl.com/` not support for multiple columns specification, it only support one column retrieval using `column_index` argument.
+
+Furthermore, the csv format has best format when compares to JSON and XML. Those two contain multiple unnecessary tags and symbol (such as XML tags, or JSON metadata, etc).
+
+As a result, the author decided to choose the csv format for dataset retrieval.
 
 4. TWAP
 --
