@@ -14,14 +14,11 @@ Java 1.8
 To run the CLI, `cd` to the folder contains `data.jar`.
 
 a. For Help, type:
-`java -jar data-jar-with-dependencies.jar --help`
+`java -jar data.jar --help`
 
 ```
 usage: ticker-data CLI
  -h,--help           Show help.
- -m,--models <arg>   Expected models that will generated, separated by
-                     colon.
-                     For example: TWAP,SMA
  -t,--ticker <arg>   Ticker symbol which generates TWAP, SMA, LWMA.
 ```
 
@@ -48,7 +45,7 @@ Furthermore, the csv format has best format when compares to JSON and XML. Those
 
 As a result, the author decided to choose the csv format for dataset retrieval.
 
-####4 Main flow
+####4. Main flow
 
 The following steps describe main flow of the provided CLI:
 
@@ -69,13 +66,13 @@ With the above flow, the retrieved dataset is iterated only one time, means `O(n
 
 *If we retrieve data as descending order, then we have to run 2 loops, one via dataset for computation and holders result in memory, and then another loop for writing data, **means `O(2n)` compares to `O(n)` when doing all computations and writing data for CSV for and alerts**.
 
-####4. TWAP
+####5. TWAP
 
 Time Weighted Average Prices for the Open, High, Low and Close prices. These values are calculated as the average of each over every day in the range. 
 
 That means we will calculate the average of Open, High, Low and Close prices in the range as TWAP-Open, TWAP-High, TWAP-Low and TWAP-Close. For example, we have 3 days as: [72, 73, 74, 75], [50, 51, 52, 53], [60, 61, 62, 63]. Hence, the TWAP-Open for that day is: (72+50+60)/3 ~ 60.67. The same for others.
 
-####5. Simple Moving Average
+####6. Simple Moving Average
 
 The reason why the author retrieves dataset as ascending order (from the past to present order), so we can examine from the past to calculate SMA of past N days.
 
@@ -92,7 +89,7 @@ For the first N days in the series, set value to 0 when writing to files.
 
 The complexity of this SMA is O(n) as explained above.
 
-####5. Linearly Weighted Moving Average
+####7. Linearly Weighted Moving Average
 
 The same as SMA, the reason why the author retrieves dataset as ascending order (from the past to present order), so we can examine from the past to calculate LWMA of past N days.
 
@@ -120,10 +117,10 @@ For the first N days in the series, set value to 0 when writing to files as SMA.
 
 The complexity of this LWMA is O(n) as explained above.
 
-#### 7. Alerts
+####8. Alerts
 
 One of the condition is calculating Volume Averge of past 50 days. This model has similar characteristics of SMA. Hence the author re-uses the SMA by providing Volume Average extends from SMA. For detail, please refer to source code, `sentifi.data.models.VolumeAverage` class.
 
 The window size of VA-50 is 50. The same logic as SMA, however, instead of passing close price as value, Volume Average uses volume value. For logic explanation, please refer to SMA, since these two have similar logic.
 
-The result of this REQ #4 is exported in `alerts.dat`. When end-users re-run the CLI (with different ticker), the newly generated alerts are APPENDED at the end of `alerts.dat`, instead of re-write the whole file. This also improve performance.
+The result of this REQ #4 is exported in `alerts.dat`. When end-users re-run the CLI (with different ticker), the newly generated alerts are **APPENDED** at the end of `alerts.dat`, instead of re-write the whole file. This also improve performance.
