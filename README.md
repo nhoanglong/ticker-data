@@ -4,14 +4,12 @@ ticker-data processing and tranformation
 This document contains many sections: usage description, data source and data processing & transformation: include TWAP, SMA, LWMA.
 
 
-1. Requirement
---
+####1. Requirement
 
 Java 1.8
 
 
-2. Usage
---
+####2. Usage
 
 To run the CLI, `cd` to the folder contains `data.jar`.
 
@@ -36,8 +34,7 @@ For different tickers have different output files. If we have one common file fo
 
 Furthermore, the output result of REQ #4 is in `alerts.dat`.
 
-3. Data source
---
+####3. Data source
 
 The data is retrieved from `https://www.quandl.com/` as the following URL for `GE`:
 
@@ -51,13 +48,11 @@ Furthermore, the csv format has best format when compares to JSON and XML. Those
 
 As a result, the author decided to choose the csv format for dataset retrieval.
 
-4. TWAP
---
+####4. TWAP
 
 Time Weighted Average Prices for the Open, High, Low and Close prices. These values are calculated as the average of each over every day in the range. 
 
 That means we will calculate the average of Open, High, Low and Close prices in the range as TWAP-Open, TWAP-High, TWAP-Low and TWAP-Close. For example, we have 3 days as: [72, 73, 74, 75], [50, 51, 52, 53], [60, 61, 62, 63]. Hence, the TWAP-Open for that day is: (72+50+60)/3 ~ 60.67. The same for others.
 
-5. Simple Moving Average
---
+####5. Simple Moving Average
 
