@@ -28,9 +28,20 @@ import sentifi.data.utils.AlertUtils;
 import sentifi.data.utils.JSONUtils;
 import sentifi.data.utils.Utils;
 
+/**
+ * A CLI to retrieve, process, transform and write various formats.
+ * 
+ * @author nhoanglong
+ * @since Dec 03 2017
+ * @version 1.0
+ */
 public class TickerCLI {
 	private final static Logger logger = Logger.getLogger(App.class);
 
+	/**
+	 * Proceed CLI with input parameters
+	 * @param args
+	 */
 	public void proceed(String[] args) {
 		Options options = new Options();
 		String ticker = null;
@@ -43,11 +54,11 @@ public class TickerCLI {
 		CommandLine cmd = null;
 		try {
 			cmd = parser.parse(options, args);
-			if (cmd.hasOption("h")) {
+			if (cmd.hasOption("h")) {// help
 				this.help(options);
 			}
 
-			if (cmd.hasOption("t")) {
+			if (cmd.hasOption("t")) {// ticker
 				System.out.println(cmd.getOptionValue("t"));
 				ticker = cmd.getOptionValue("t");
 				this.proceedQuandlData(ticker);
@@ -61,6 +72,10 @@ public class TickerCLI {
 		}
 	}
 
+	/**
+	 * Provide Help information of CLI
+	 * @param options
+	 */
 	private void help(Options options) {
 		// Print Help and Usage
 		HelpFormatter formater = new HelpFormatter();
@@ -68,6 +83,11 @@ public class TickerCLI {
 		System.exit(0);
 	}
 
+	/**
+	 * Retrieve Quandle data, then transform and export to JSON, CSV and make alerts 
+	 * @param tickerSymbol
+	 * @throws Exception
+	 */
 	private void proceedQuandlData(String tickerSymbol) throws Exception {
 		logger.info("Retrieving data of " + tickerSymbol + " from Quandl...");
 		int counter = 0;
@@ -78,7 +98,7 @@ public class TickerCLI {
 
 		// default is GET
 		int responseCode = con.getResponseCode();
-		logger.debug("\nSending 'GET' request to URL : " + url);
+		logger.debug("Sending 'GET' request to URL : " + url);
 		logger.debug("Response Code : " + responseCode);
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -101,6 +121,7 @@ public class TickerCLI {
 					Utils.TWAP_CLOSE_STR, dm.getSMA50().getName(), dm.getSMA200().getName(), dm.getLWMA15().getName(),
 					dm.getLWMA50().getName());
 
+			logger.info("Processing data of " + tickerSymbol + " from Quandl...");
 			while ((record = in.readLine()) != null) {
 				if (counter == 0) {
 					// this is header
@@ -166,6 +187,7 @@ public class TickerCLI {
 			
 			json.put(Utils.PRICES_STR, jsonArray);
 			JSONUtils.writeToJSONFile(tickerSymbol, json);
+			logger.info("Completed writing data to JSON.");
 		} catch (IOException e) {
 			// exception handling
 			logger.error("Error while handling file: " + e.getMessage());

@@ -6,6 +6,10 @@ public class VolumeAverage extends SimpleMovingAverage {
 		super(length, name);
 	}
 
+	/**
+	 * Get the Average Moving value.
+	 * @return average
+	 */
 	@Override
 	public double getAverage() {
 		return average;

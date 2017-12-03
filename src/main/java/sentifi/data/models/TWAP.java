@@ -1,5 +1,11 @@
 package sentifi.data.models;
 
+/**
+ * Time Weighted Average Price model.
+ * @author nhoanglong
+ * @since Dec 03 2017
+ * @version 1.0
+ */
 public class TWAP {
 	private int counter;// actual number of record
 	private double openSum;
@@ -13,7 +19,6 @@ public class TWAP {
 
 	/**
 	 * Add new record and sum open, close, high and low with new added values.
-	 * 
 	 * @param open
 	 * @param close
 	 * @param high
@@ -28,8 +33,7 @@ public class TWAP {
 	}
 
 	/**
-	 * Get value of TWAP-Open
-	 * 
+	 * Get TWAP-Open value
 	 * @return TWAP-Open
 	 */
 	public double getTWAPOpen() {
@@ -38,7 +42,6 @@ public class TWAP {
 
 	/**
 	 * Get value of TWAP-Close
-	 * 
 	 * @return TWAP-Close
 	 */
 	public double getTWAPClose() {
@@ -47,7 +50,6 @@ public class TWAP {
 
 	/**
 	 * Get value of TWAP-High
-	 * 
 	 * @return TWAP-High
 	 */
 	public double getTWAPHigh() {
@@ -56,7 +58,6 @@ public class TWAP {
 
 	/**
 	 * Get value of TWAP-Low
-	 * 
 	 * @return TWAP-Low
 	 */
 	public double getTWAPLow() {

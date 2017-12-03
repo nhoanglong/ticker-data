@@ -1,5 +1,12 @@
 package sentifi.data.models;
 
+/**
+ * Data model object which contain multiple data transformation models.
+ * Include TWAP, SMA-50, SMA-200, LWMA-15, LWMA-50 and VA-50
+ * @author nhoanglong
+ * @since Dec 03 2017
+ * @version 1.0
+ */
 public class DataModels {
 	private TWAP twap = new TWAP();
 	private MovingAverageModel sma50 = new SimpleMovingAverage(50, "SMA-50");
@@ -8,6 +15,14 @@ public class DataModels {
 	private MovingAverageModel lwma50 = new LinearWeightedMovingAverage(50, "LWMA-50");
 	private MovingAverageModel va50 = new VolumeAverage(5, "VolumeAverage-50");
 	
+	/**
+	 * Add new record into data model.
+	 * @param open
+	 * @param close
+	 * @param high
+	 * @param low
+	 * @param volume
+	 */
 	public void addNewRecord(double open, double close, double high, double low, double volume) {
 		twap.addNewRecord(open, close, high, low);
 		sma50.addNewValue(close);

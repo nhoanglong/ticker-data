@@ -1,5 +1,11 @@
 package sentifi.data.utils;
 
+/**
+ * Utils class provides utility strings and functions.
+ * @author nhoanglong
+ * @since Dec 03 2017
+ * @version 1.0
+ */
 public class Utils {
 	public static final String PRICES_STR = "Prices";
 	public static final String TICKER_STR = "Ticker";

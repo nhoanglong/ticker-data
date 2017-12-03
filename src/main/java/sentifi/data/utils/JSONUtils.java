@@ -4,7 +4,21 @@ import java.io.FileWriter;
 
 import org.json.JSONObject;
 
+/**
+ * JSON Utils class provides utility functions for exporting JSON file
+ * @author nhoanglong
+ * @since Dec 03 2017
+ * @version 1.0
+ */
 public class JSONUtils {
+	
+	/**
+	 * Write to JSON file as pretty-print format.
+	 * Exported file: ticker-name.json.
+	 * For example: GE.json
+	 * @param ticker
+	 * @param json
+	 */
 	public static void writeToJSONFile(String ticker, JSONObject json) {
 		try (FileWriter fileWriter = new FileWriter(ticker + ".json")) {
 			fileWriter.write(json.toString(4));
@@ -14,6 +28,25 @@ public class JSONUtils {
 		}
 	}
 
+	/**
+	 * Create JSON Object of record attributes.
+	 * @param ticker
+	 * @param date
+	 * @param open
+	 * @param high
+	 * @param low
+	 * @param close
+	 * @param volume
+	 * @param twapOpen
+	 * @param twapHigh
+	 * @param twapLow
+	 * @param twapClose
+	 * @param sma50
+	 * @param sma200
+	 * @param lwma15
+	 * @param lwma50
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public static JSONObject createJSONRecord(String ticker, String date, String open, String high, String low,
 			String close, String volume, String twapOpen, String twapHigh, String twapLow, String twapClose,
