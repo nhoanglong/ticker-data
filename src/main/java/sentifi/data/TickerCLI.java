@@ -40,6 +40,7 @@ public class TickerCLI {
 
 	/**
 	 * Proceed CLI with input parameters
+	 * 
 	 * @param args
 	 */
 	public void proceed(String[] args) {
@@ -74,6 +75,7 @@ public class TickerCLI {
 
 	/**
 	 * Provide Help information of CLI
+	 * 
 	 * @param options
 	 */
 	private void help(Options options) {
@@ -84,7 +86,9 @@ public class TickerCLI {
 	}
 
 	/**
-	 * Retrieve Quandle data, then transform and export to JSON, CSV and make alerts 
+	 * Retrieve Quandle data, then transform and export to JSON, CSV and make
+	 * alerts
+	 * 
 	 * @param tickerSymbol
 	 * @throws Exception
 	 */
@@ -116,7 +120,7 @@ public class TickerCLI {
 				CsvAppender csvAppender = csvWriter.append(file, StandardCharsets.UTF_8)) {
 
 			// Append CSV header
-			csvAppender.appendLine(Utils.TICKER_STR, Utils.DATE_STR, Utils.OPEN_STR, Utils.HIGH_STR, Utils.LOW_STR,
+			writeCSVLine(csvAppender, Utils.TICKER_STR, Utils.DATE_STR, Utils.OPEN_STR, Utils.HIGH_STR, Utils.LOW_STR,
 					Utils.CLOSE_STR, Utils.VOLUME_STR, Utils.TWAP_OPEN_STR, Utils.TWAP_HIGH_STR, Utils.TWAP_LOW_STR,
 					Utils.TWAP_CLOSE_STR, dm.getSMA50().getName(), dm.getSMA200().getName(), dm.getLWMA15().getName(),
 					dm.getLWMA50().getName());
@@ -152,19 +156,20 @@ public class TickerCLI {
 					String lwma50Str = Double.toString(dm.getLWMA50().getAverage());
 
 					// Append functional REQ #1, #2 and #3 in ticker.csv
-					csvAppender.appendLine(tickerSymbol, date, openValueStr, highValueStr, lowValueStr, closeValueStr,
-							volumeStr, twapOpenStr, twapHighStr, twapLowStr, twapCloseStr, sma50Str, sma200Str,
-							lwma15Str, lwma50Str);
+					writeCSVLine(csvAppender, tickerSymbol, date, openValueStr, highValueStr, lowValueStr,
+							closeValueStr, volumeStr, twapOpenStr, twapHighStr, twapLowStr, twapCloseStr, sma50Str,
+							sma200Str, lwma15Str, lwma50Str);
 
 					// Append functional REQ #1, #2 and #3 in JSONArray and
 					// ready for export ticker.json
-					JSONObject tmp = JSONUtils.createJSONRecord((String) tickerSymbol, date, openValueStr, highValueStr,
+					JSONObject tmp = JSONUtils.createJSONRecord(tickerSymbol, date, openValueStr, highValueStr,
 							lowValueStr, closeValueStr, volumeStr, twapOpenStr, twapHighStr, twapLowStr, twapCloseStr,
-							sma50Str, sma200Str, lwma15Str, lwma50Str);;
-					
+							sma50Str, sma200Str, lwma15Str, lwma50Str);
+					;
+
 					jsonArray.put(tmp);
-					
-					if(counter < 5) {
+
+					if (counter < 5) {
 						System.out.println(tmp);
 						System.out.println(jsonArray);
 					}
@@ -184,7 +189,7 @@ public class TickerCLI {
 				counter++;
 			}
 			in.close();
-			
+
 			json.put(Utils.PRICES_STR, jsonArray);
 			JSONUtils.writeToJSONFile(tickerSymbol, json);
 			logger.info("Completed writing data to JSON.");
@@ -197,5 +202,13 @@ public class TickerCLI {
 		}
 		System.out.println(counter + " lines, 1st is headers");
 		System.out.println(dm);
+	}
+
+	public void writeCSVLine(CsvAppender csvAppender, String tickerSymbol, String date, String openValueStr,
+			String highValueStr, String lowValueStr, String closeValueStr, String volumeStr, String twapOpenStr,
+			String twapHighStr, String twapLowStr, String twapCloseStr, String sma50Str, String sma200Str,
+			String lwma15Str, String lwma50Str) throws IOException {
+		csvAppender.appendLine(tickerSymbol, date, openValueStr, highValueStr, lowValueStr, closeValueStr, volumeStr,
+				twapOpenStr, twapHighStr, twapLowStr, twapCloseStr, sma50Str, sma200Str, lwma15Str, lwma50Str);
 	}
 }
