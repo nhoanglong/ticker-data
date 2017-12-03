@@ -48,6 +48,27 @@ Furthermore, the csv format has best format when compares to JSON and XML. Those
 
 As a result, the author decided to choose the csv format for dataset retrieval.
 
+####4 Main flow
+
+The following steps describe main flow of the provided CLI:
+
+```
+Start
+Retrieve dataset in ascending order
+Loop through each record in dataset
+	Compute TWAPs, SMAs, LWMAs and VA
+	Append in ticker-name.csv
+	Append JSONObject into JSONArray
+	Append alert of REQ #4 at the end of alerts.dat if conditions are satisfied
+End loop
+Write JSONArray as JSONObject in ticker-name.json
+End
+```
+
+With the above flow, the retrieved dataset is iterated only one time, means `O(n)` for all computations and writing data for CSV for and alerts. Except for JSON format, since we have to write as data as a JSONObject.
+
+*If we retrieve data as descending order, then we have to run 2 loops, one via dataset for computation and holders result in memory, and then another loop for writing data, **means `O(2n)` compares to `O(n)` when doing all computations and writing data for CSV for and alerts**.
+
 ####4. TWAP
 
 Time Weighted Average Prices for the Open, High, Low and Close prices. These values are calculated as the average of each over every day in the range. 
@@ -56,3 +77,53 @@ That means we will calculate the average of Open, High, Low and Close prices in 
 
 ####5. Simple Moving Average
 
+The reason why the author retrieves dataset as ascending order (from the past to present order), so we can examine from the past to calculate SMA of past N days.
+
+The author decided to choose a Queue as a window, with the size for SMA-50 is 50 and size for SMA-200 is 200.
+
+For example: the last five closing prices for MSFT are:
+28.93+28.48+28.44+28.91+28.48 = 143.24 (this value will be stored, and re-use when adding new value for efficient performance)
+Simple Moving Average in the past 5 days is:
+SMA-5 = 143.24/5 = 28.65
+
+When new value (assume 50) is added, so, we use the sum which is stored substract old value and add new value, **instead of looping and re-calculate when adding new value everytime**. This way provides better performance. For example: (143.24 - 28.93 + 50)/5 as new SMA-5. Hence it's O(n).
+
+For the first N days in the series, set value to 0 when writing to files.
+
+The complexity of this SMA is O(n) as explained above.
+
+####5. Linearly Weighted Moving Average
+
+The same as SMA, the reason why the author retrieves dataset as ascending order (from the past to present order), so we can examine from the past to calculate LWMA of past N days.
+
+Since LWMA has common attributes (such as Queue) and basic logic as SMA, the author decided to create LWMA model based on SMA (LWMA will be extended from SMA, see source code for more detail).
+
+For example, we have a queue as: tail [2, 4, 7, 4, 5] head, and multiplier is from 1-5.
+
+Means 2x5 + 4x4 + 7x3 + 4x2 + 5x1 = 60 -> valuesSum
+
+1 + 2 + 3 + 4 + 5 = 15 -> multiplierSum
+
+2 + 4 + 7 + 4 + 5 = 22 -> basicSum
+
+LWMA-5 = 60 / 15 = 4
+
+When new value is added, so, we use the valuesSum which is stored substract old multiplied value and add new multiplied value, **instead of looping and re-calculate when adding new value everytime**. This way provides better performance as SMA.
+
+For example, add new value as 6 into the queue, we have new queue as tail [6, 2, 4, 7, 4] head:
+
+new valueSum = 6x5 + 2x(5-1) + 4x(4-1) + 7x(3-1) + 4x(2-1) = 6x5 + 2x5 + 4x4 + 7x3 + 4x2 + 5x1 - (2 + 4 + 7 + 4 + 5) = 6*5 + 60 - 22
+
+new LWMA-5 = (90 - 22)/15 = 4.533
+
+For the first N days in the series, set value to 0 when writing to files as SMA.
+
+The complexity of this LWMA is O(n) as explained above.
+
+#### 7. Alerts
+
+One of the condition is calculating Volume Averge of past 50 days. This model has similar characteristics of SMA. Hence the author re-uses the SMA by providing Volume Average extends from SMA. For detail, please refer to source code, `sentifi.data.models.VolumeAverage` class.
+
+The window size of VA-50 is 50. The same logic as SMA, however, instead of passing close price as value, Volume Average uses volume value. For logic explanation, please refer to SMA, since these two have similar logic.
+
+The result of this REQ #4 is exported in `alerts.dat`. When end-users re-run the CLI (with different ticker), the newly generated alerts are APPENDED at the end of `alerts.dat`, instead of re-write the whole file. This also improve performance.
