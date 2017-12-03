@@ -26,4 +26,6 @@ public class Utils {
 	
 	public static final String ALERT_BEARISH_STR = "bearish";
 	public static final String ALERT_BULLISH_STR = "bullish";
+	
+	public static final String ALERT_FILE_NAME = "alerts.dat";
 }

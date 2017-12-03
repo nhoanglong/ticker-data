@@ -30,7 +30,6 @@ import sentifi.data.utils.Utils;
 
 /**
  * A CLI to retrieve, process, transform and write various formats.
- * 
  * @author nhoanglong
  * @since Dec 03 2017
  * @version 1.0
@@ -40,7 +39,6 @@ public class TickerCLI {
 
 	/**
 	 * Proceed CLI with input parameters
-	 * 
 	 * @param args
 	 */
 	public void proceed(String[] args) {
@@ -48,8 +46,6 @@ public class TickerCLI {
 		String ticker = null;
 		options.addOption("h", "help", false, "Show help.");
 		options.addOption("t", "ticker", true, "Ticker symbol which generates TWAP, SMA, LWMA.");
-		options.addOption("m", "models", true,
-				"Expected models that will generated, separated by colon. \nFor example: TWAP,SMA");
 
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd = null;
@@ -75,7 +71,6 @@ public class TickerCLI {
 
 	/**
 	 * Provide Help information of CLI
-	 * 
 	 * @param options
 	 */
 	private void help(Options options) {
@@ -88,7 +83,6 @@ public class TickerCLI {
 	/**
 	 * Retrieve Quandle data, then transform and export to JSON, CSV and make
 	 * alerts
-	 * 
 	 * @param tickerSymbol
 	 * @throws Exception
 	 */
@@ -114,7 +108,7 @@ public class TickerCLI {
 		JSONObject json = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
 
-		try (FileWriter fw = new FileWriter("alerts.dat", true);
+		try (FileWriter fw = new FileWriter(Utils.ALERT_FILE_NAME, true);
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw);
 				CsvAppender csvAppender = csvWriter.append(file, StandardCharsets.UTF_8)) {
@@ -169,22 +163,12 @@ public class TickerCLI {
 
 					jsonArray.put(tmp);
 
-					if (counter < 5) {
-						System.out.println(tmp);
-						System.out.println(jsonArray);
-					}
-
 					// Append functional REQ #4 in alerts.dat
 					double sma50Avg = dm.getSMA50().getAverage();
 					double sma200Avg = dm.getSMA200().getAverage();
 					double va50 = dm.getVA50().getAverage();
-					if (sma50Avg < sma200Avg) {
-						out.println(AlertUtils.getAlertSMA50LowerThanSMA200(tickerSymbol, date, openValue, highValue,
-								lowValue, closeValue, volume, sma50Avg, sma200Avg));
-					} else if (sma50Avg > sma200Avg && volume > va50 * 1.1) {
-						out.println(AlertUtils.getAlertSMA50AbovesSMA200(tickerSymbol, date, openValue, highValue,
-								lowValue, closeValue, volume, va50, sma50Avg, sma200Avg));
-					}
+					writeAlertIfSatisfiesConditions(out, tickerSymbol, date, openValue, highValue, lowValue, closeValue,
+							volume, va50, sma50Avg, sma200Avg);
 				}
 				counter++;
 			}
@@ -210,5 +194,16 @@ public class TickerCLI {
 			String lwma15Str, String lwma50Str) throws IOException {
 		csvAppender.appendLine(tickerSymbol, date, openValueStr, highValueStr, lowValueStr, closeValueStr, volumeStr,
 				twapOpenStr, twapHighStr, twapLowStr, twapCloseStr, sma50Str, sma200Str, lwma15Str, lwma50Str);
+	}
+
+	public void writeAlertIfSatisfiesConditions(PrintWriter out, String ticker, String date, double open, double high,
+			double low, double close, double volume, double volAverage50, double sma50Avg, double sma200Avg) {
+		if (sma50Avg < sma200Avg) {
+			out.println(AlertUtils.getAlertSMA50LowerThanSMA200(ticker, date, open, high, low, close, volume, sma50Avg,
+					sma200Avg));
+		} else if (sma50Avg > sma200Avg && volume > volAverage50 * 1.1) {
+			out.println(AlertUtils.getAlertSMA50AbovesSMA200(ticker, date, open, high, low, close, volume, volAverage50,
+					sma50Avg, sma200Avg));
+		}
 	}
 }
